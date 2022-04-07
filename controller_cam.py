@@ -1,12 +1,15 @@
 from datetime import datetime
 import cv2
 import time
+import pandas
 
 
 first_frame = None  # creates the first frame condition with just the background
 
 status_list = [None, None]
 times = []
+
+data_frames = pandas.DataFrame(columns=['Start', 'End'])
 
 video = cv2.VideoCapture(0)
 
@@ -61,7 +64,14 @@ while True:
         break
 
 # print(status_list)
-print(times)
+# print(times)
+
+for time in range(0, len(times), 2):
+    data_frames = data_frames.append(
+        {'Start': times[time], 'End': times[time+1]}, ignore_index=True)
+
+data_frames.to_csv('Times.csv')
+
 
 video.release()
 cv2.destroyAllWindows
